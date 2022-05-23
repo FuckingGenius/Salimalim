@@ -1,4 +1,4 @@
-package com.fitmos.salimalim
+package com.minki.salimalim
 
 import org.junit.Test
 

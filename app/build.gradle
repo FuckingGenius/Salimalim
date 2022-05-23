@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
 }
 
 android {
@@ -8,7 +9,7 @@ android {
     buildToolsVersion "30.0.1"
 
     defaultConfig {
-        applicationId "com.fitmos.salimalim"
+        applicationId "com.minki.salimalim"
         minSdkVersion 21
         targetSdkVersion 31
         versionCode 1

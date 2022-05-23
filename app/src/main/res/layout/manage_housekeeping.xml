@@ -7,7 +7,17 @@
     android:orientation="vertical"
     >
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="살림 관리"
+        android:textSize="20sp" />
+
     <com.google.android.material.tabs.TabLayout
+        android:id="@+id/ManageTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabIndicatorColor="#F2FF00">
@@ -15,21 +25,41 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Monday" />
+            android:text="전체" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tuesday" />
+            android:text="식품" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wednesday" />
+            android:text="욕실용품" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="생활용품" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="주방용품" />
     </com.google.android.material.tabs.TabLayout>
 
+    <TextView
+        android:id="@+id/Test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ManageRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 </LinearLayout>

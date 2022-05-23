@@ -1,9 +1,10 @@
-package com.fitmos.salimalim
+package com.minki.salimalim
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import com.minki.salimalim.manage.ManageFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -23,12 +24,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         fragments.add(shopFragment)
         fragments.add(communityFragment)
 
-//        for(i in 0 until fragments.size){
-//            supportFragmentManager.beginTransaction().add(R.id.Main_Frame, fragments[i]).commit()
-//        }
-        supportFragmentManager.beginTransaction().add(R.id.Main_Frame, fragments[0]).commit()
-        supportFragmentManager.beginTransaction().add(R.id.Main_Frame, fragments[1]).commit()
-        supportFragmentManager.beginTransaction().add(R.id.Main_Frame, fragments[2]).commit()
+        for(i in 0 until fragments.size)
+            supportFragmentManager.beginTransaction().add(R.id.Main_Frame, fragments[i]).commit()
         selectFragment(0)
         findViewById<BottomNavigationView>(R.id.Main_Bottom_Navigation).setOnNavigationItemSelectedListener(this)
     }

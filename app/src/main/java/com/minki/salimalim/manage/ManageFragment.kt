@@ -20,6 +20,7 @@ import com.google.android.material.tabs.TabLayout
 import com.minki.salimalim.MainActivity
 import com.minki.salimalim.R
 import com.minki.salimalim.SqlHelper
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.manage_housekeeping.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -96,6 +97,7 @@ class ManageFragment : Fragment() {
                     (activity as MainActivity).isSearch = true
                     (activity as MainActivity).surfingQuery = item.goodsName
                     (activity as MainActivity).selectFragment(1)
+                    (activity as MainActivity).Main_Bottom_Navigation.selectedItemId = R.id.shop
                 }
             }
 

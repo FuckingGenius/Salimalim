@@ -35,7 +35,7 @@ class ManageRecyclerAdapter (private val data : ArrayList<ManageRecyclerData>, p
             view.ManageGoodsName.text = item.goodsName
             view.ManageGoodsCategory.text = category.get(item.category)
             view.ManagePurchasedDate.text = item.purchaseDate + " ~"
-            view.ManageGoodsQuantity.text = item.quantity.toString()
+            view.ManageGoodsQuantity.text = item.quantity.toString() + "개"
             if (item.volume == null || item.volume == 0)
                 view.ManageVolume.text = ""
             else

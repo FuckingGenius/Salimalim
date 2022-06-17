@@ -44,7 +44,7 @@ class MyReceiver : BroadcastReceiver() {
         val sqlHelper = SqlHelper(context,"manage_table",null,1)
         val items = sqlHelper.selectManage()
         var text = ""
-        var min = 0
+        var min = 1000
         var daysLeft = 0
         var icon = R.drawable.ic_launcher_background
         for(item in items){
@@ -60,6 +60,8 @@ class MyReceiver : BroadcastReceiver() {
                 }
             }
         }
+        if(min > 10)
+            return
         text += if(min < 0)
             "${Math.abs(min)}일 경과되었습니다."
         else
@@ -74,7 +76,8 @@ class MyReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
 
-        notificationManager.notify(1004, builder.build())    }
+        notificationManager.notify(1004, builder.build())
+    }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

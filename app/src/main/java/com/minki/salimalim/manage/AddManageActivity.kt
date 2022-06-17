@@ -89,7 +89,7 @@ class AddManageActivity : CommonActivity() {
                 val num = canSend.indexOf(false)
                 var where = ""
                 when(num){
-                    0 -> where = "상품명"
+                    0 -> where = "물품명"
                     1 -> where = "분류"
                     2 -> where = "구매날짜"
                     3 -> where = "용량"

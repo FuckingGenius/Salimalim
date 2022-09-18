@@ -32,7 +32,8 @@ class ManageRecyclerAdapter (private val data : ArrayList<ManageRecyclerData>, p
                 4 -> resource = R.drawable.kitchen
             }
             view.ManageIcon.setImageResource(resource)
-            view.ManageGoodsName.text = item.goodsName
+            Log.v("호호","이게 먼저야? ${CommonActivity.goods}" )
+            view.ManageGoodsName.text = CommonActivity.goods[item.goodsName-1].goodsName
             view.ManageGoodsCategory.text = category.get(item.category)
             view.ManagePurchasedDate.text = item.purchaseDate + " ~"
             view.ManageGoodsQuantity.text = item.quantity.toString() + "개"

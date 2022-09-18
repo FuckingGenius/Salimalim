@@ -51,7 +51,7 @@ class MyReceiver : BroadcastReceiver() {
             daysLeft = (item.usedTerm * item.quantity) - CommonActivity().getTime(item.purchaseDate)
             if (daysLeft < min) {
                 min = daysLeft
-                text = "${item.goodsName}의 예상 기한이 "
+                text = "${CommonActivity.goods[item.goodsName-1].goodsName}의 예상 기한이 "
                 when (item.category) {
                     1 -> icon = R.drawable.grocery
                     2 -> icon = R.drawable.restroom

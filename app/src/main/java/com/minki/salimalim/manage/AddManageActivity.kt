@@ -1,7 +1,6 @@
 package com.minki.salimalim.manage
 
 import android.app.DatePickerDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -12,7 +11,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.minki.salimalim.system.CommonActivity
 import com.minki.salimalim.MainActivity
@@ -26,14 +24,19 @@ class AddManageActivity : CommonActivity() {
 
     private val options = 6
     private var categoryNum = 0
+    private var goodsNum = 0
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_manage)
+        var dialogList = ArrayList<CharSequence>()
         val categoryList = ArrayList<CharSequence>()
+        val goodsList = ArrayList<CharSequence>()
+        val dialog = AlertDialog.Builder(this)
         Log.v("카테고리",categories.toString())
         Log.v("카테고리",categories.values.toString())
+
 
         // 분류 얻어오기
         for(i in categories.values)
@@ -43,6 +46,7 @@ class AddManageActivity : CommonActivity() {
         // 입력 여부 확인을 위한 리스트 초기화
         for(i in 0 until options)
             canSend.add(false)
+        canSend[0] = true
 
         Log.v("카테고리2",categoryList.toString())
 
@@ -51,16 +55,30 @@ class AddManageActivity : CommonActivity() {
         addTextListener(AddManageVolume,2)
         addTextListener(AddManageUsedTerm,3)
 
-
         AddManageCategory.setOnClickListener {
             if(AddManageCategory.text == "")
                 canSend[4] = false
-            val dialog = AlertDialog.Builder(this)
-            dialog.setTitle("분류를 선택하세요").setItems(categoryList.toTypedArray()
+            dialogList.clear()
+            dialogList.addAll(categoryList)
+            dialog.setTitle("분류를 선택하세요").setItems(dialogList.toTypedArray()
             ) { dialog, position ->
-                AddManageCategory.text = "▼ ${categoryList[position]}"
-                canSend[4] = true
-                categoryNum = position + 1
+                goodsList.clear()
+                goodsList.addAll(getGoods(position+1))
+                Log.v("호호","$goodsList")
+                dialogList.clear()
+                dialogList.addAll(goodsList)
+                val dialog = AlertDialog.Builder(this)
+                dialog.setTitle("물품명을 선택하세요").setItems(dialogList.toTypedArray()){
+                    dialog, position ->
+                    canSend[4] = true
+                    for(i in goods)
+                        if(i.goodsName.equals(dialogList[position])){
+                            categoryNum = i.category
+                            goodsNum = i.id
+                        }
+                    AddManageCategory.text = "${goodsList[position]}"
+                }.create().show()
+
             }.create().show()
         }
 
@@ -80,7 +98,7 @@ class AddManageActivity : CommonActivity() {
         AddManageSend.setOnClickListener {
             if(!canSend.contains(false)){
                 val sqlHelper = SqlHelper(this,"manage_table",null,1)
-                val manage = ManageRecyclerData(sqlHelper.selectLastId(),AddManageGoodsName.text.toString(),AddManagePurchasedDate.text.toString(),categoryNum,
+                val manage = ManageRecyclerData(sqlHelper.selectLastId(),goodsNum,AddManagePurchasedDate.text.toString(),categoryNum,
                 AddManageQuantity.text.toString().toInt(),AddManageVolume.text.toString().toInt(),AddManageUsedTerm.text.toString().toInt())
                 sqlHelper.insertManage(manage)
                 setResult(RESULT_OK)
@@ -89,8 +107,7 @@ class AddManageActivity : CommonActivity() {
                 val num = canSend.indexOf(false)
                 var where = ""
                 when(num){
-                    0 -> where = "물품명"
-                    1 -> where = "분류"
+                    1 -> where = "물품명"
                     2 -> where = "구매날짜"
                     3 -> where = "용량"
                     4 -> where = "개수"

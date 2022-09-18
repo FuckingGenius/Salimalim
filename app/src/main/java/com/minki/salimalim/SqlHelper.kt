@@ -5,7 +5,12 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.minki.salimalim.manage.GoodsData
 import com.minki.salimalim.manage.ManageRecyclerData
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -14,16 +19,31 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
 
     private val manageTableName = "manage_table"
     private val categoryTableName = "category_table"
+    private val goodsTableName = "goods_table"
 
     private val manageTable = "create table $manageTableName (id integer primary key autoincrement, goodsName text, purchasedDate text, category integer default 1, quantity integer, volume integer, usedTerm integer)"
     private val categoryTable = "create table $categoryTableName (id integer primary key autoincrement, category text)"
+
+
     override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL(manageTable)
-        db?.execSQL(categoryTable)
+    }
+
+    private fun insertCategory() {
+        val values = ContentValues()
+        val wd = writableDatabase
+        values.put("category","식품")
+        wd.insert(categoryTableName,null,values)
+        values.put("category","욕실용품")
+        wd.insert(categoryTableName,null,values)
+        values.put("category","생활용품")
+        wd.insert(categoryTableName,null,values)
+        values.put("category","주방용품")
+        wd.insert(categoryTableName,null,values)
+        wd.close()
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
-
     }
 
     fun insertManage(manage : ManageRecyclerData){
@@ -47,8 +67,13 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
         val cursor = rd.rawQuery(selectLastId,null)
         cursor.moveToFirst()
         Log.v("불러오기1 개수", cursor.count.toString())
-        val idNum = cursor.getColumnIndex("id")
-        return cursor.getInt(idNum)
+        try {
+
+            val idNum = cursor.getColumnIndex("id")
+            return cursor.getInt(idNum)
+        }catch (e : Exception){
+            return 0
+        }
     }
 
     fun getCategories() : MutableMap<Int,String> {
@@ -63,12 +88,32 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
             val category = cursor.getString(categoryNum)
             categories[id] = category
         }
+        Log.v("카테고리","$categories")
         return categories
+    }
+
+    fun getGoods() : ArrayList<GoodsData>{
+        val goods = ArrayList<GoodsData>()
+
+        val rd = readableDatabase
+        val cursor = rd.rawQuery("select * from $goodsTableName",null)
+        while(cursor.moveToNext()){
+            val idNum = cursor.getColumnIndex("id")
+            val goodsNameNum = cursor.getColumnIndex("goods_name")
+            val categoryNum = cursor.getColumnIndex("category")
+            val id = cursor.getInt(idNum)
+            val goodsName = cursor.getString(goodsNameNum)
+            val category = cursor.getInt(categoryNum)
+            Log.v("호호",goodsNameNum.toString())
+            goods.add(GoodsData(id,goodsName,category))
+        }
+        Log.v("호호",goods.toString())
+        return goods
     }
 
     fun selectManage() : ArrayList<ManageRecyclerData>{
         val list = ArrayList<ManageRecyclerData>()
-        val selectAll = "select * from $manageTableName"
+        val selectAll = "SELECT * from $manageTableName join $goodsTableName on goodsName = $goodsTableName.id"
         val rd = readableDatabase
         val cursor = rd.rawQuery(selectAll,null)
 
@@ -82,7 +127,7 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
             val usedTermNum= cursor.getColumnIndex(("usedTerm"))
 
             val id = cursor.getInt(idNum)
-            val goodName = cursor.getString(goodNameNum)
+            val goodName = cursor.getInt(goodNameNum)
             val purchasedDate = cursor.getString(purchasedDateNum)
             val category= cursor.getInt(categoryNum)
             val quantity = cursor.getInt(quantityNum)

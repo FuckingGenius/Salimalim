@@ -20,6 +20,7 @@ import com.google.android.material.tabs.TabLayout
 import com.minki.salimalim.MainActivity
 import com.minki.salimalim.R
 import com.minki.salimalim.SqlHelper
+import com.minki.salimalim.system.CommonActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.manage_housekeeping.*
 import java.util.*
@@ -36,6 +37,7 @@ class ManageFragment : Fragment() {
 
     var categories = mutableMapOf<Int,String>()
     val items = ArrayList<ManageRecyclerData>()
+    var goods = CommonActivity.goods
     lateinit var sqlHelper : SqlHelper
     lateinit var activityResultLauncher : ActivityResultLauncher<Intent>
     private lateinit var tab : TabLayout
@@ -48,7 +50,6 @@ class ManageFragment : Fragment() {
         sqlHelper = SqlHelper((activity as MainActivity),"manage_table",null,1)
         categories = (activity as MainActivity).categories
         val category = ArrayList<String>()
-
         for(i in categories.values)
             category.add(i)
 
@@ -68,7 +69,7 @@ class ManageFragment : Fragment() {
                 // 아이템 클릭 시 이벤트
                 val viewPopup = inflater.inflate(R.layout.view_item_popup, ManageHouseKeepingLayout,false)
                 val dialog = AlertDialog.Builder((activity as MainActivity)).setView(viewPopup).show()
-                viewPopup.findViewById<TextView>(R.id.ViewItemName).text = item.goodsName
+                viewPopup.findViewById<TextView>(R.id.ViewItemName).text = goods[item.goodsName-1].goodsName
                 viewPopup.findViewById<TextView>(R.id.ViewItemCategory).text = categories.get(item.category)
                 viewPopup.findViewById<TextView>(R.id.ViewItemPurchasedDate).text = item.purchaseDate
                 viewPopup.findViewById<TextView>(R.id.ViewItemVolume).text = "${item.volume}(g/ml)"
@@ -95,7 +96,7 @@ class ManageFragment : Fragment() {
                 viewPopup.findViewById<Button>(R.id.ViewItemPurchase).setOnClickListener {
                     dialog.dismiss()
                     (activity as MainActivity).isSearch = true
-                    (activity as MainActivity).surfingQuery = item.goodsName
+                    (activity as MainActivity).surfingQuery = goods[item.goodsName-1].goodsName
                     (activity as MainActivity).selectFragment(1)
                     (activity as MainActivity).Main_Bottom_Navigation.selectedItemId = R.id.shop
                 }

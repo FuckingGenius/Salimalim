@@ -24,12 +24,17 @@ class EditManageActivity : CommonActivity() {
 
     private val options = 6
     private var categoryNum = 0
+    private var goodsNum = 0
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_manage)
 
+        var dialogList = ArrayList<CharSequence>()
+        val categoryList = ArrayList<CharSequence>()
+        val goodsList = ArrayList<CharSequence>()
+        val dialog = AlertDialog.Builder(this)
         val data : ManageRecyclerData = intent.getSerializableExtra("item") as ManageRecyclerData
         var category : ArrayList<String> = intent.getStringArrayListExtra("category") as ArrayList<String>
 
@@ -39,15 +44,14 @@ class EditManageActivity : CommonActivity() {
         val editable = Editable.Factory.getInstance()
         AddManageTitle.text = "물품 수정"
         AddManageSend.text = "수정"
-        AddManageGoodsName.text = editable.newEditable(data.goodsName)
-        AddManageCategory.text = editable.newEditable(category.get(data.category-1))
+        AddManageCategory.text = editable.newEditable(goods[data.goodsName-1].goodsName)
+        AddManageCategoryOriginal.text = editable.newEditable(category.get(data.category-1))
         categoryNum = data.category
         AddManagePurchasedDate.text = editable.newEditable(data.purchaseDate)
         AddManageVolume.text = editable.newEditable(data.volume.toString())
         AddManageQuantity.text = editable.newEditable(data.quantity.toString())
         AddManageUsedTerm.text = editable.newEditable(data.usedTerm.toString())
 
-        val categoryList = ArrayList<CharSequence>()
 
         // 분류 얻어오기
         for(i in categories.values)
@@ -69,17 +73,32 @@ class EditManageActivity : CommonActivity() {
         AddManageCategory.setOnClickListener {
             if(AddManageCategory.text == "")
                 canSend[4] = false
-            val dialog = AlertDialog.Builder(this)
-            dialog.setTitle("분류를 선택하세요").setItems(categoryList.toTypedArray()
+            dialogList.clear()
+            dialogList.addAll(categoryList)
+            dialog.setTitle("분류를 선택하세요").setItems(dialogList.toTypedArray()
             ) { dialog, position ->
-                AddManageCategory.text = "▼ ${categoryList[position]}"
-                canSend[4] = true
-                categoryNum = position + 1
+                goodsList.clear()
+                goodsList.addAll(getGoods(position+1))
+                Log.v("호호","$goodsList")
+                dialogList.clear()
+                dialogList.addAll(goodsList)
+                val dialog = AlertDialog.Builder(this)
+                dialog.setTitle("물품명을 선택하세요").setItems(dialogList.toTypedArray()){
+                        dialog, position ->
+                    canSend[4] = true
+                    for(i in goods)
+                        if(i.goodsName.equals(dialogList[position])){
+                            categoryNum = i.category
+                            goodsNum = i.id
+                        }
+                    AddManageCategory.text = "${goodsList[position]}"
+                }.create().show()
+
             }.create().show()
         }
 
         AddManagePurchasedDate.setOnClickListener{
-            if(AddManageCategory.text == "")
+            if(AddManageCategoryOriginal.text == "")
                 canSend[5] = false
             val calendar = Calendar.getInstance()
             val dateListener = DatePickerDialog.OnDateSetListener { view, year, month, day ->
@@ -94,7 +113,7 @@ class EditManageActivity : CommonActivity() {
         AddManageSend.setOnClickListener {
             if(!canSend.contains(false)){
                 val sqlHelper = SqlHelper(this,"manage_table",null,1)
-                data.goodsName = AddManageGoodsName.text.toString()
+                data.goodsName = goodsNum
                 data.purchaseDate = AddManagePurchasedDate.text.toString()
                 data.category = categoryNum
                 data.quantity = AddManageQuantity.text.toString().toInt()

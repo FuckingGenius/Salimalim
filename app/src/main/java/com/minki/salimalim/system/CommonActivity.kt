@@ -1,5 +1,6 @@
 package com.minki.salimalim.system
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -14,15 +15,21 @@ open class CommonActivity : AppCompatActivity() {
     companion object{
         var goods = ArrayList<GoodsData>()
     }
+    lateinit var sqlHelper : SqlHelper
     var surfingQuery = ""
     var isSearch = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var sqlHelper = SqlHelper((this),"manage_table",null,1)
+        sqlHelper = SqlHelper((this),"manage_table",null,1)
         var dbHelper = DataBaseHelper(this)
-        goods = sqlHelper.getGoods()
         Log.v("호호","누가먼저냐")
         categories = sqlHelper.getCategories()
+        updateGoods(this)
+    }
+
+    fun updateGoods(context : Context){
+        val sqlHelper = SqlHelper((context),"manage_table",null,1)
+        goods = sqlHelper.getGoods()
     }
 
     fun getGoods (position : Int): ArrayList<CharSequence> {

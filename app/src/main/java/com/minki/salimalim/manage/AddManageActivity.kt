@@ -1,23 +1,28 @@
 package com.minki.salimalim.manage
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AlertDialogLayout
 import androidx.core.widget.addTextChangedListener
 import com.minki.salimalim.system.CommonActivity
 import com.minki.salimalim.MainActivity
 import com.minki.salimalim.R
 import com.minki.salimalim.SqlHelper
+import kotlinx.android.synthetic.main.add_goods_edittext.*
 import kotlinx.android.synthetic.main.add_manage.*
 import java.util.*
+import java.util.zip.Inflater
 import kotlin.collections.ArrayList
 
 class AddManageActivity : CommonActivity() {
@@ -25,6 +30,7 @@ class AddManageActivity : CommonActivity() {
     private val options = 6
     private var categoryNum = 0
     private var goodsNum = 0
+    private var currentCategory = 0
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +42,7 @@ class AddManageActivity : CommonActivity() {
         val dialog = AlertDialog.Builder(this)
         Log.v("카테고리",categories.toString())
         Log.v("카테고리",categories.values.toString())
-
+        val sqlHelper = SqlHelper(this,"manage_table",null,1)
 
         // 분류 얻어오기
         for(i in categories.values)
@@ -56,29 +62,38 @@ class AddManageActivity : CommonActivity() {
         addTextListener(AddManageUsedTerm,3)
 
         AddManageCategory.setOnClickListener {
-            if(AddManageCategory.text == "")
+            if (AddManageCategory.text == "")
                 canSend[4] = false
             dialogList.clear()
             dialogList.addAll(categoryList)
-            dialog.setTitle("분류를 선택하세요").setItems(dialogList.toTypedArray()
+            dialog.setTitle("분류를 선택하세요").setItems(
+                dialogList.toTypedArray()
             ) { dialog, position ->
+                currentCategory = position + 1
                 goodsList.clear()
-                goodsList.addAll(getGoods(position+1))
-                Log.v("호호","$goodsList")
+                goodsList.addAll(getGoods(position + 1))
+                Log.v("호호", "$goodsList")
                 dialogList.clear()
                 dialogList.addAll(goodsList)
                 val dialog = AlertDialog.Builder(this)
-                dialog.setTitle("물품명을 선택하세요").setItems(dialogList.toTypedArray()){
-                    dialog, position ->
-                    canSend[4] = true
-                    for(i in goods)
-                        if(i.goodsName.equals(dialogList[position])){
-                            categoryNum = i.category
-                            goodsNum = i.id
-                        }
-                    AddManageCategory.text = "${goodsList[position]}"
-                }.create().show()
-
+                dialog.setTitle("물품명을 선택하세요")
+                    .setItems(dialogList.toTypedArray()) { dialog, position ->
+                        canSend[4] = true
+                        AddManageCategory.text = "${goodsList[position]}"
+                    }.setPositiveButton("물품 추가하기") { dialog, position ->
+                        val addDialog = AlertDialog.Builder(this)
+                        val newView =
+                            AlertDialogLayout.inflate(this, R.layout.add_goods_edittext, null)
+                        addDialog.setView(newView)
+                        addDialog.setTitle("추가할 물품명을 입력하세요")
+                            .setPositiveButton("추가") { dialog, position ->
+                                val goodsName = newView.findViewById<EditText>(R.id.AddGoods).text
+                                sqlHelper.addGoods(GoodsData(0, goodsName.toString(), currentCategory), this)
+                                AddManageCategory.text = goodsName
+                                canSend[4] = true
+                                Toast.makeText(this, "${goodsName}가 추가되었습니다!", Toast.LENGTH_SHORT).show()
+                            }.show()
+                    }.create().show()
             }.create().show()
         }
 
@@ -87,7 +102,7 @@ class AddManageActivity : CommonActivity() {
                 canSend[5] = false
             val calendar = Calendar.getInstance()
             val dateListener = DatePickerDialog.OnDateSetListener { view, year, month, day ->
-                val monthString = if(month < 10) "0${month+1}" else month+1
+                val monthString = if(month < 9) "0${month+1}" else month+1
                 val dayString = if(day < 10) "0$day" else day
                 AddManagePurchasedDate.text = "$year-$monthString-$dayString"
                 canSend[5] = true
@@ -97,6 +112,14 @@ class AddManageActivity : CommonActivity() {
 
         AddManageSend.setOnClickListener {
             if(!canSend.contains(false)){
+                for (i in goods){
+                    Log.v("이전$i","${i.goodsName} 과 ${AddManageCategory.text}")
+                    if (i.goodsName.equals( AddManageCategory.text.toString())) {
+                        categoryNum = i.category
+                        goodsNum = i.id
+                    }
+                }
+
                 val sqlHelper = SqlHelper(this,"manage_table",null,1)
                 val manage = ManageRecyclerData(sqlHelper.selectLastId(),goodsNum,AddManagePurchasedDate.text.toString(),categoryNum,
                 AddManageQuantity.text.toString().toInt(),AddManageVolume.text.toString().toInt(),AddManageUsedTerm.text.toString().toInt())

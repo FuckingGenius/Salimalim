@@ -5,8 +5,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import android.widget.TextView
 import com.minki.salimalim.manage.GoodsData
 import com.minki.salimalim.manage.ManageRecyclerData
+import com.minki.salimalim.system.CommonActivity
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -40,8 +42,8 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
         values.put("category","주방용품")
         wd.insert(categoryTableName,null,values)
         wd.close()
-
     }
+
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
     }
@@ -152,8 +154,19 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
         values.put("usedTerm",manage.usedTerm)
 
         val wd = writableDatabase
-        wd.update("$manageTableName",values,"id=${manage.id}",null)
+        wd.update(manageTableName,values,"id=${manage.id}",null)
         wd.close()
+    }
+
+    fun addGoods(goodsData: GoodsData, context : Context){
+        val values = ContentValues()
+
+        values.put("goods_name",goodsData.goodsName)
+        values.put("category",goodsData.category)
+
+        val wd = writableDatabase
+        wd.insert(goodsTableName,null,values)
+        CommonActivity().updateGoods(context)
     }
 
     fun deleteManage(manage: ManageRecyclerData){

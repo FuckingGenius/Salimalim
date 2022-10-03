@@ -48,20 +48,6 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
     }
 
-    fun insertManage(manage : ManageRecyclerData){
-        val values = ContentValues()
-
-        values.put("goodsName",manage.goodsName)
-        values.put("category",manage.category)
-        values.put("purchasedDate",manage.purchaseDate)
-        values.put("quantity",manage.quantity)
-        values.put("volume",manage.volume)
-        values.put("usedTerm",manage.usedTerm)
-        val wd = writableDatabase
-        wd.insert(manageTableName,null,values)
-        Log.v("데이터 입력 성공",values.toString())
-        wd.close()
-    }
 
     fun selectLastId() : Int{
         val selectLastId = "select id from $manageTableName order by id desc "
@@ -120,7 +106,7 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
         val cursor = rd.rawQuery(selectAll,null)
 
         while(cursor.moveToNext()){
-            val idNum = cursor.getColumnIndex("id")
+            val idNum = cursor.getColumnIndex("manage_table.id")
             val goodNameNum = cursor.getColumnIndex(("goodsName"))
             val purchasedDateNum = cursor.getColumnIndex(("purchasedDate"))
             val categoryNum = cursor.getColumnIndex(("category"))
@@ -128,7 +114,7 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
             val volumeNum= cursor.getColumnIndex(("volume"))
             val usedTermNum= cursor.getColumnIndex(("usedTerm"))
 
-            val id = cursor.getInt(idNum)
+            val id = cursor.getInt(0)
             val goodName = cursor.getInt(goodNameNum)
             val purchasedDate = cursor.getString(purchasedDateNum)
             val category= cursor.getInt(categoryNum)
@@ -155,6 +141,20 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
 
         val wd = writableDatabase
         wd.update(manageTableName,values,"id=${manage.id}",null)
+        wd.close()
+    }
+
+    fun insertManage(manage : ManageRecyclerData){
+        val values = ContentValues()
+        values.put("goodsName",manage.goodsName)
+        values.put("category",manage.category)
+        values.put("purchasedDate",manage.purchaseDate)
+        values.put("quantity",manage.quantity)
+        values.put("volume",manage.volume)
+        values.put("usedTerm",manage.usedTerm)
+        val wd = writableDatabase
+        wd.insert(manageTableName,null,values)
+        Log.v("데이터 입력 성공",values.toString())
         wd.close()
     }
 

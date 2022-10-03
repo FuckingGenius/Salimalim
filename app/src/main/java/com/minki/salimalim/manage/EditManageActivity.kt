@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AlertDialogLayout
 import androidx.core.widget.addTextChangedListener
 import com.minki.salimalim.system.CommonActivity
 import com.minki.salimalim.MainActivity
@@ -25,6 +26,7 @@ class EditManageActivity : CommonActivity() {
     private val options = 6
     private var categoryNum = 0
     private var goodsNum = 0
+    private var currentCategory = 0
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,29 +73,38 @@ class EditManageActivity : CommonActivity() {
 
 
         AddManageCategory.setOnClickListener {
-            if(AddManageCategory.text == "")
+            if (AddManageCategory.text == "")
                 canSend[4] = false
             dialogList.clear()
             dialogList.addAll(categoryList)
-            dialog.setTitle("분류를 선택하세요").setItems(dialogList.toTypedArray()
+            dialog.setTitle("분류를 선택하세요").setItems(
+                dialogList.toTypedArray()
             ) { dialog, position ->
+                currentCategory = position + 1
                 goodsList.clear()
-                goodsList.addAll(getGoods(position+1))
-                Log.v("호호","$goodsList")
+                goodsList.addAll(getGoods(position + 1))
+                Log.v("호호", "$goodsList")
                 dialogList.clear()
                 dialogList.addAll(goodsList)
                 val dialog = AlertDialog.Builder(this)
-                dialog.setTitle("물품명을 선택하세요").setItems(dialogList.toTypedArray()){
-                        dialog, position ->
-                    canSend[4] = true
-                    for(i in goods)
-                        if(i.goodsName.equals(dialogList[position])){
-                            categoryNum = i.category
-                            goodsNum = i.id
-                        }
-                    AddManageCategory.text = "${goodsList[position]}"
-                }.create().show()
-
+                dialog.setTitle("물품명을 선택하세요")
+                    .setItems(dialogList.toTypedArray()) { dialog, position ->
+                        canSend[4] = true
+                        AddManageCategory.text = "${goodsList[position]}"
+                    }.setPositiveButton("물품 추가하기") { dialog, position ->
+                        val addDialog = AlertDialog.Builder(this)
+                        val newView =
+                            AlertDialogLayout.inflate(this, R.layout.add_goods_edittext, null)
+                        addDialog.setView(newView)
+                        addDialog.setTitle("추가할 물품명을 입력하세요")
+                            .setPositiveButton("추가") { dialog, position ->
+                                val goodsName = newView.findViewById<EditText>(R.id.AddGoods).text
+                                sqlHelper.addGoods(GoodsData(0, goodsName.toString(), currentCategory), this)
+                                AddManageCategory.text = goodsName
+                                canSend[4] = true
+                                Toast.makeText(this, "${goodsName}가 추가되었습니다!", Toast.LENGTH_SHORT).show()
+                            }.show()
+                    }.create().show()
             }.create().show()
         }
 
@@ -112,6 +123,13 @@ class EditManageActivity : CommonActivity() {
 
         AddManageSend.setOnClickListener {
             if(!canSend.contains(false)){
+                for (i in goods) {
+                    Log.v("이전$i", "${i.goodsName} 과 ${AddManageCategory.text}")
+                    if (i.goodsName.equals(AddManageCategory.text.toString())) {
+                        categoryNum = i.category
+                        goodsNum = i.id
+                    }
+                }
                 val sqlHelper = SqlHelper(this,"manage_table",null,1)
                 data.goodsName = goodsNum
                 data.purchaseDate = AddManagePurchasedDate.text.toString()
@@ -119,7 +137,7 @@ class EditManageActivity : CommonActivity() {
                 data.quantity = AddManageQuantity.text.toString().toInt()
                 data.volume = AddManageVolume.text.toString().toInt()
                 data.usedTerm = AddManageUsedTerm.text.toString().toInt()
-
+                Log.v("이전","$data")
                 sqlHelper.updateManage(data)
                 setResult(RESULT_OK)
                 this.finish()

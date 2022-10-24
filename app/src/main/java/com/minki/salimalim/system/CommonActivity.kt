@@ -14,6 +14,12 @@ open class CommonActivity : AppCompatActivity() {
     var categories : MutableMap<Int,String> = mutableMapOf()
     companion object{
         var goods = ArrayList<GoodsData>()
+        var heightPixels : Int = 0
+        var widthPixels : Int = 0
+        var xdpi : Int = 0
+        var ydpi : Int = 0
+        var iconSize = 0.03f
+        var navigationSize = 0.15f
     }
     lateinit var sqlHelper : SqlHelper
     var surfingQuery = ""
@@ -26,6 +32,7 @@ open class CommonActivity : AppCompatActivity() {
         categories = sqlHelper.getCategories()
         updateGoods(this)
     }
+
 
     fun updateGoods(context : Context){
         val sqlHelper = SqlHelper((context),"manage_table",null,1)

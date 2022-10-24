@@ -1,5 +1,6 @@
 package com.minki.salimalim
 
+import android.app.ActionBar
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Intent
@@ -8,6 +9,8 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.MenuItem
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -16,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.minki.salimalim.shop.ShopFragment
 import com.minki.salimalim.system.CommonActivity
 import com.minki.salimalim.system.MyReceiver
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : CommonActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -46,10 +50,19 @@ class MainActivity : CommonActivity(), BottomNavigationView.OnNavigationItemSele
         )
 
 
+        heightPixels = resources.displayMetrics.heightPixels
+        widthPixels = resources.displayMetrics.widthPixels
+        xdpi = resources.displayMetrics.widthPixels
+        ydpi = resources.displayMetrics.heightPixels
+
+        Main_Bottom_Navigation.layoutParams .height = (ydpi * navigationSize).toInt()
+        Log.v("아아아", Main_Bottom_Navigation.layoutParams.height.toString())
+
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 
         val intent = Intent(this, MyReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
+
             this, 1004, intent,
             PendingIntent.FLAG_MUTABLE
         )
@@ -95,7 +108,7 @@ class MainActivity : CommonActivity(), BottomNavigationView.OnNavigationItemSele
             when(item.itemId){
                 R.id.manage -> selectFragment(0)
                 R.id.shop -> selectFragment(1)
-                R.id.community -> selectFragment(2)
+//                R.id.community -> selectFragment(2)
             }
             true
         }

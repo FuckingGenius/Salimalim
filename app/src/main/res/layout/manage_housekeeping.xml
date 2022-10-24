@@ -4,7 +4,7 @@
     android:id="@+id/ManageHouseKeepingLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/app_white_color"
     android:orientation="vertical">
 
     <TextView
@@ -14,7 +14,8 @@
         android:layout_marginBottom="20dp"
         android:gravity="center_horizontal"
         android:text="살림 관리"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="gone" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/ManageTabLayout"
@@ -52,24 +53,78 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:layout_height="1dp"
+        android:layout_marginTop="0.5dp"
+        android:background="#000000"
         android:orientation="horizontal">
 
-        <TextView
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ManageRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/app_white_color"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/AddManage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="+ 추가하기" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:alpha="0.7"
+            android:backgroundTint="#0090FF"
+            android:clickable="true"
+            android:contentDescription="물품 추가"
+            android:focusable="true"
+            android:src="@drawable/add3"
+            android:tint="@color/app_white_color"
+            app:fabSize="normal"
+            app:rippleColor="#777777" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/AddManage_Previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/AddManageIcon"
+                android:layout_width="39dp"
+                android:layout_height="39dp"
+                app:srcCompat="@drawable/plus" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/welcome_bold"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="추가하기"
+                android:visibility="gone" />
+        </LinearLayout>
+
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ManageRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="15dp"
-        android:background="#FFFFFF"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 </LinearLayout>

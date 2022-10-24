@@ -45,7 +45,9 @@ class ManageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        var iconDpi = CommonActivity.iconSize * CommonActivity.ydpi
+        AddManageIcon.layoutParams.height = (iconDpi).toInt()
+        AddManageIcon.layoutParams.width = (iconDpi).toInt()
 
         sqlHelper = SqlHelper((activity as MainActivity),"manage_table",null,1)
         categories = (activity as MainActivity).categories

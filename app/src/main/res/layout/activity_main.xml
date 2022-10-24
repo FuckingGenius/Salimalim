@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_white_color"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -12,16 +13,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="#FFFFFF">
+        android:background="@color/app_white_color">
 
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/Main_Bottom_Navigation"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:layout_weight="1"
+        android:alpha="0.7"
+        android:background="#000000"
+        android:theme="@style/Font"
+        app:itemIconTint="@drawable/item_select_color"
         app:itemTextColor="@drawable/item_select_color"
-        app:menu="@menu/bottom_navigation"
-        />
+        app:menu="@menu/bottom_navigation" />
 </LinearLayout>

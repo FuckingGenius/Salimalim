@@ -99,10 +99,12 @@ class EditManageActivity : CommonActivity() {
                         addDialog.setTitle("추가할 물품명을 입력하세요")
                             .setPositiveButton("추가") { dialog, position ->
                                 val goodsName = newView.findViewById<EditText>(R.id.AddGoods).text
-                                sqlHelper.addGoods(GoodsData(0, goodsName.toString(), currentCategory), this)
-                                AddManageCategory.text = goodsName
-                                canSend[4] = true
-                                Toast.makeText(this, "${goodsName}가 추가되었습니다!", Toast.LENGTH_SHORT).show()
+                                if(sqlHelper.addGoods(GoodsData(0, goodsName.toString(), currentCategory), this)){
+                                    AddManageCategory.text = goodsName
+                                    canSend[4] = true
+                                    Toast.makeText(this, "${goodsName}가 추가되었습니다!", Toast.LENGTH_SHORT).show()
+                                }else
+                                    Toast.makeText(this,"중복된 상품명입니다.",Toast.LENGTH_SHORT).show()
                             }.show()
                     }.create().show()
             }.create().show()
@@ -137,10 +139,12 @@ class EditManageActivity : CommonActivity() {
                 data.quantity = AddManageQuantity.text.toString().toInt()
                 data.volume = AddManageVolume.text.toString().toInt()
                 data.usedTerm = AddManageUsedTerm.text.toString().toInt()
-                Log.v("이전","$data")
-                sqlHelper.updateManage(data)
-                setResult(RESULT_OK)
-                this.finish()
+                if(sqlHelper.updateManage(data)) {
+                    setResult(RESULT_OK)
+                    this.finish()
+                }
+                else
+                    Toast.makeText(this,"이미 해당 물품이 있습니다.",Toast.LENGTH_SHORT).show()
             }else{
                 val num = canSend.indexOf(false)
                 var where = ""
@@ -164,9 +168,9 @@ class EditManageActivity : CommonActivity() {
         }
     }
 
-    val canSend = ArrayList<Boolean>()
+    private val canSend = ArrayList<Boolean>()
 
-    val textWatcher = object : TextWatcher{
+    private val textWatcher = object : TextWatcher{
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
 

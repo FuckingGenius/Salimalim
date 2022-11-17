@@ -49,7 +49,7 @@ class ManageRecyclerAdapter (private val data : ArrayList<ManageRecyclerData>, p
             if (daysLeft > 10)
                 view.ManageLayout.setBackgroundColor(Color.parseColor("#E1E0E0"))
             else
-                view.ManageLayout.setBackgroundColor(Color.parseColor("#EF8282"))
+                view.ManageLayout.setBackgroundColor(Color.parseColor("#FAAEAE")) // 기존 : #EF8282
         }
     }
 

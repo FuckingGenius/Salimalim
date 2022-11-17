@@ -9,7 +9,7 @@
         android:id="@+id/ManageLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#EF8282"
+        android:background="#FAAEAE"
         android:orientation="horizontal"
         android:paddingTop="10dp">
 

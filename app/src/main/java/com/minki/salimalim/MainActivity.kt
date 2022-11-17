@@ -9,10 +9,13 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.minki.salimalim.manage.ManageFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -20,11 +23,14 @@ import com.minki.salimalim.shop.ShopFragment
 import com.minki.salimalim.system.CommonActivity
 import com.minki.salimalim.system.MyReceiver
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.shop_housekeeping.*
 
 class MainActivity : CommonActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     private val currentNum = 0
     private var fragments = ArrayList<Fragment>()
+    private var backPressedTime: Long = 0
+    lateinit var searchView : WebView
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,6 +126,21 @@ class MainActivity : CommonActivity(), BottomNavigationView.OnNavigationItemSele
                 supportFragmentManager.beginTransaction().show(fragments[i]).commit()
             else
                 supportFragmentManager.beginTransaction().hide(fragments[i]).commit()
+        }
+    }
+
+    override fun onBackPressed() {
+        if(searchView.canGoBack())
+            searchView.goBack()
+        else{
+            if (System.currentTimeMillis() > backPressedTime + 2000) {
+                backPressedTime = System.currentTimeMillis();
+                Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르면 종료돼요.", Toast.LENGTH_SHORT).show()
+            } else if (System.currentTimeMillis() <= backPressedTime + 2000) {
+                super.onBackPressed()
+                finish()
+                AppCompatActivity().finishAffinity()
+            }
         }
     }
 }

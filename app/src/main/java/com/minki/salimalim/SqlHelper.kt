@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import com.minki.salimalim.manage.GoodsData
 import com.minki.salimalim.manage.ManageRecyclerData
 import com.minki.salimalim.system.CommonActivity
@@ -129,7 +130,7 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
         return list
     }
 
-    fun updateManage(manage: ManageRecyclerData){
+    fun updateManage(manage: ManageRecyclerData) : Boolean{
         val values = ContentValues()
 
         values.put("goodsName",manage.goodsName)
@@ -140,11 +141,13 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
         values.put("usedTerm",manage.usedTerm)
 
         val wd = writableDatabase
-        wd.update(manageTableName,values,"id=${manage.id}",null)
+        var success = wd.update(manageTableName,values,"id=${manage.id}",null)
         wd.close()
+
+        return success != -1
     }
 
-    fun insertManage(manage : ManageRecyclerData){
+    fun insertManage(manage : ManageRecyclerData) : Boolean{
         val values = ContentValues()
         values.put("goodsName",manage.goodsName)
         values.put("category",manage.category)
@@ -153,20 +156,23 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
         values.put("volume",manage.volume)
         values.put("usedTerm",manage.usedTerm)
         val wd = writableDatabase
-        wd.insert(manageTableName,null,values)
-        Log.v("데이터 입력 성공",values.toString())
+        var success = wd.insert(manageTableName,null,values)
+        Log.v("데이터 입력 성공?",values.toString())
+        Log.v("데이터 입력 성공?",success.toString())
         wd.close()
+        return success.toInt() != -1
     }
 
-    fun addGoods(goodsData: GoodsData, context : Context){
+    fun addGoods(goodsData: GoodsData, context : Context) : Boolean{
         val values = ContentValues()
 
         values.put("goods_name",goodsData.goodsName)
         values.put("category",goodsData.category)
 
         val wd = writableDatabase
-        wd.insert(goodsTableName,null,values)
+        var success = wd.insert(goodsTableName,null,values)
         CommonActivity().updateGoods(context)
+        return success.toInt() != -1
     }
 
     fun deleteManage(manage: ManageRecyclerData){

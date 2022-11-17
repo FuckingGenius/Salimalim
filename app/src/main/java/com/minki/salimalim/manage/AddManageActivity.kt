@@ -88,10 +88,12 @@ class AddManageActivity : CommonActivity() {
                         addDialog.setTitle("추가할 물품명을 입력하세요")
                             .setPositiveButton("추가") { dialog, position ->
                                 val goodsName = newView.findViewById<EditText>(R.id.AddGoods).text
-                                sqlHelper.addGoods(GoodsData(0, goodsName.toString(), currentCategory), this)
-                                AddManageCategory.text = goodsName
-                                canSend[4] = true
-                                Toast.makeText(this, "${goodsName}가 추가되었습니다!", Toast.LENGTH_SHORT).show()
+                                if(sqlHelper.addGoods(GoodsData(0, goodsName.toString(), currentCategory), this)){
+                                    AddManageCategory.text = goodsName
+                                    canSend[4] = true
+                                    Toast.makeText(this, "${goodsName}가 추가되었습니다!", Toast.LENGTH_SHORT).show()
+                                }else
+                                    Toast.makeText(this,"중복된 물품명입니다.",Toast.LENGTH_SHORT).show()
                             }.show()
                     }.create().show()
             }.create().show()
@@ -123,9 +125,13 @@ class AddManageActivity : CommonActivity() {
                 val sqlHelper = SqlHelper(this,"manage_table",null,1)
                 val manage = ManageRecyclerData(sqlHelper.selectLastId(),goodsNum,AddManagePurchasedDate.text.toString(),categoryNum,
                 AddManageQuantity.text.toString().toInt(),AddManageVolume.text.toString().toInt(),AddManageUsedTerm.text.toString().toInt())
-                sqlHelper.insertManage(manage)
-                setResult(RESULT_OK)
-                this.finish()
+                if(sqlHelper.insertManage(manage)){
+                    setResult(RESULT_OK)
+                    this.finish()
+                }
+                else{
+                    Toast.makeText(this,"해당 물품이 이미 있습니다!",Toast.LENGTH_SHORT).show()
+                }
             }else{
                 val num = canSend.indexOf(false)
                 var where = ""

@@ -6,13 +6,14 @@
         <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.21" />
         <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/drawable/ic_launcher_background.xml" value="0.21" />
         <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/drawable/item_select_color.xml" value="0.2365" />
-        <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/activity_main.xml" value="0.536" />
+        <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/add_goods_edittext.xml" value="0.176" />
         <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/add_manage.xml" value="0.264" />
         <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/community_housekeeping.xml" value="0.1334853090172239" />
-        <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/manage_housekeeping.xml" value="0.4659090909090909" />
+        <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/manage_housekeeping.xml" value="0.264" />
         <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/manage_recycler.xml" value="0.264" />
-        <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/shop_housekeeping.xml" value="0.264" />
+        <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/report.xml" value="0.264" />
+        <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/shop_housekeeping.xml" value="0.176" />
         <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/layout/view_item_popup.xml" value="0.4" />
         <entry key="..\:/AndroidProject/Salimalim/app/src/main/res/menu/bottom_navigation.xml" value="0.22870370370370371" />
       </map>

@@ -107,7 +107,7 @@ class SqlHelper(context: Context?, name: String?, factory: SQLiteDatabase.Cursor
         val cursor = rd.rawQuery(selectAll,null)
 
         while(cursor.moveToNext()){
-            val idNum = cursor.getColumnIndex("manage_table.id")
+//            val idNum = cursor.getColumnIndex("manage_table.id")
             val goodNameNum = cursor.getColumnIndex(("goodsName"))
             val purchasedDateNum = cursor.getColumnIndex(("purchasedDate"))
             val categoryNum = cursor.getColumnIndex(("category"))

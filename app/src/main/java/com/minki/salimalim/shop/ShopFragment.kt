@@ -67,7 +67,7 @@ class ShopFragment : Fragment() {
         super.onHiddenChanged(hidden)
         if((activity as MainActivity).isSearch) run {
             val query = (activity as MainActivity).surfingQuery
-            ShopWebView.loadUrl("https://msearch.shopping.naver.com/search/all?query=${query}&sort=price_asc")
+            ShopWebView.loadUrl("https://msearch.shopping.naver.com/search/all?query=${query}")
             SelectSite.text = "▼ 네이버"
             (activity as MainActivity).isSearch = false
         }

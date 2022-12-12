@@ -78,10 +78,21 @@ class ManageFragment : Fragment() {
                 viewPopup.findViewById<TextView>(R.id.ViewItemQuantity).text = "${item.quantity} 개"
                 viewPopup.findViewById<TextView>(R.id.ViewItemUsedTerm).text = "${item.usedTerm} 일"
                 viewPopup.findViewById<TextView>(R.id.ViewItemDaysLeft).text = v.findViewById<TextView>(R.id.ManageDaysLeft).text.split(" ")[0]
+
                 viewPopup.findViewById<Button>(R.id.ViewItemEdit).setOnClickListener {
                     val editManage = Intent((activity as MainActivity), EditManageActivity::class.java)
                     editManage.putExtra("item",item)
                     editManage.putExtra("category",category)
+                    editManage.putExtra("update?",false)
+                    dialog.dismiss()
+                    activityResultLauncher.launch(editManage) // activityResultLauncher 사용
+                }
+                viewPopup.findViewById<Button>(R.id.ViewItemUpdate
+                ).setOnClickListener {
+                    val editManage = Intent((activity as MainActivity), EditManageActivity::class.java)
+                    editManage.putExtra("item",item)
+                    editManage.putExtra("category",category)
+                    editManage.putExtra("update?",true)
                     dialog.dismiss()
                     activityResultLauncher.launch(editManage) // activityResultLauncher 사용
                 }

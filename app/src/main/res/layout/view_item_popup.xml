@@ -253,6 +253,14 @@
             android:text="수정" />
 
         <Button
+            android:id="@+id/ViewItemUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/welcome_regular"
+            android:text="갱신"
+            android:textColor="#003FFF" />
+
+        <Button
             android:id="@+id/ViewItemDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
